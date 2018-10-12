@@ -15,6 +15,7 @@ before_install:
   - git clone -b varnish-$VER https://github.com/varnishcache/varnish-cache.git
   - cd varnish-cache && ./autogen.sh && ./configure && make &&
     sudo make install && sudo ldconfig && cd ..
+  - sudo groupadd varnish
   - sudo usermod -a -G varnish $USER
 script:
   - sudo -E su $USER -c "$(which go) test -v"
