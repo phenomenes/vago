@@ -5,10 +5,16 @@ go:
   - "1.10"
   - "1.11"
 env:
-  - VER=5.2
+  - VER=6.0.1
+addons:
+  apt:
+    packages:
+      - python-docutils
+      - python-sphinx
 before_install:
-  - curl -s https://packagecloud.io/install/repositories/varnishcache/varnish${VER/./}/script.deb.sh | sudo bash
-  - sudo apt-get install varnish=${VER}.* varnish-dev=${VER}.*
+  - git clone -b varnish-$VER https://github.com/varnishcache/varnish-cache.git
+  - cd varnish-cache && ./autogen.sh && ./configure && make &&
+    sudo make install && sudo ldconfig && cd ..
   - sudo usermod -a -G varnish $USER
 script:
   - sudo -E su $USER -c "$(which go) test -v"
